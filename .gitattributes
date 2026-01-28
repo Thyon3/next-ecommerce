@@ -1,2 +1,0 @@
-# Preserve exact file contents (avoid CRLF/LF rewriting)
-* -text
