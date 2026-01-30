@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { getList } from "@/actions/list/listServices";
@@ -24,6 +24,8 @@ import { cn } from "@/shared/utils/styling";
 const ListPage = () => {
   const router = useRouter();
   const { params } = useParams<{ params: string[] }>();
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("q") || undefined;
   const pathName = usePathname();
 
   const [productList, setProductList] = useState<TListItem[]>([]);
@@ -44,7 +46,7 @@ const ListPage = () => {
     const getProductsList = async () => {
       setIsListLoading(true);
 
-      const response = await getList(pathName, SORT_DATA[sortIndex], appliedFilters);
+      const response = await getList(pathName, SORT_DATA[sortIndex], appliedFilters, searchQuery);
       if (response.error || !response.products || !response.subCategories) return router.push("/");
 
       if (isFilterApplied) {
@@ -61,9 +63,9 @@ const ListPage = () => {
     };
 
     getProductsList();
-  }, [router, pathName, sortIndex, appliedFilters, isFilterApplied]);
+  }, [router, pathName, sortIndex, appliedFilters, isFilterApplied, searchQuery]);
 
-  if (!params || !params.length) router.push("/");
+  if ((!params || !params.length) && !searchQuery) router.push("/");
 
   const handleSortChange = (newIndex: number) => {
     setSortIndex(newIndex);
@@ -79,6 +81,8 @@ const ListPage = () => {
   };
 
   const getPageHeader = () => {
+    if (searchQuery) return `Search Results for "${searchQuery}"`;
+    if (!params || !params.length) return "";
     const pageName = params[params.length - 1].split("-");
     pageName.forEach((word, index) => {
       pageName[index] = word[0].toUpperCase() + word.slice(1);

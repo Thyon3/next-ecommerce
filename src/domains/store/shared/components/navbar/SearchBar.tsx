@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
 import { SearchIcon } from "@/shared/components/icons/svgIcons";
 
 const SearchBar = () => {

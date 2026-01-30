@@ -11,8 +11,14 @@ const ValidateSort = z.object({
   sortType: z.enum(["asc", "desc"]),
 });
 
-export const getList = async (path: string, sortData: TListSort, filters: TFilters) => {
+export const getList = async (path: string, sortData: TListSort, filters: TFilters, searchQuery?: string) => {
   if (!ValidateSort.safeParse(sortData).success) return { error: "Invalid Path" };
+  if (searchQuery) {
+    const result = await getProductsBySearch(searchQuery, sortData, filters);
+    if (!result) return { error: "Can't Find Product!" };
+    return { products: result, subCategories: [] };
+  }
+
   if (!path || path === "") return { error: "Invalid Path" };
   const pathArray = pathToArray(path);
   if (!pathArray || pathArray.length > 3 || pathArray.length === 0) return { error: "Invalid Path" };
@@ -122,21 +128,93 @@ const getProductsByCategories = async (categories: string[], sortData: TListSort
           },
           isAvailable !== null
             ? {
-                isAvailable: isAvailable,
-              }
+              isAvailable: isAvailable,
+            }
             : {},
           brands
             ? {
-                brandID: { in: brands },
-              }
+              brandID: { in: brands },
+            }
             : {},
           !isInitialPrice
             ? {
-                price: {
-                  gt: filters.priceMinMax[0],
-                  lte: filters.priceMinMax[1],
-                },
-              }
+              price: {
+                gt: filters.priceMinMax[0],
+                lte: filters.priceMinMax[1],
+              },
+            }
+            : {},
+        ],
+      },
+      select: {
+        id: true,
+        brand: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        images: true,
+        name: true,
+        price: true,
+        salePrice: true,
+        specialFeatures: true,
+        isAvailable: true,
+      },
+      orderBy: {
+        [sortData.sortName]: sortData.sortType,
+      },
+    });
+    if (!result) return null;
+    return result;
+  } catch {
+    return null;
+  }
+
+}
+
+
+const getProductsBySearch = async (query: string, sortData: TListSort, filters: TFilters) => {
+  const brands: string[] | null = filters.brands.length > 0 ? [] : null;
+  if (brands) {
+    filters.brands.forEach((brand) => {
+      if (brand.isSelected) return brands.push(brand.id);
+    });
+  }
+
+  let isAvailable: boolean | null = null;
+  if (filters.stockStatus === "inStock") isAvailable = true;
+  if (filters.stockStatus === "outStock") isAvailable = false;
+
+  const isInitialPrice = filters.priceMinMax[1] === 0;
+
+  try {
+    const result: TListItem[] | null = await db.product.findMany({
+      where: {
+        AND: [
+          {
+            name: {
+              contains: query,
+              mode: "insensitive",
+            },
+          },
+          isAvailable !== null
+            ? {
+              isAvailable: isAvailable,
+            }
+            : {},
+          brands
+            ? {
+              brandID: { in: brands },
+            }
+            : {},
+          !isInitialPrice
+            ? {
+              price: {
+                gt: filters.priceMinMax[0],
+                lte: filters.priceMinMax[1],
+              },
+            }
             : {},
         ],
       },
@@ -165,6 +243,7 @@ const getProductsByCategories = async (categories: string[], sortData: TListSort
     return null;
   }
 };
+
 
 const pathToArray = (path: string) => {
   const pathWithoutList = path.split("/list/")[1];
