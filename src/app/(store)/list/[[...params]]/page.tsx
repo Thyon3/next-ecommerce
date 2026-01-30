@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { SearchIcon } from "@/shared/components/icons/svgIcons";
 import { getList } from "@/actions/list/listServices";
 import ProductCard from "@/domains/product/components/productCard";
 import { ProductListSkeleton } from "@/domains/store/productList/components";
@@ -47,10 +48,16 @@ const ListPage = () => {
       setIsListLoading(true);
 
       const response = await getList(pathName, SORT_DATA[sortIndex], appliedFilters, searchQuery);
+
+      if (searchQuery && (!response.products || response.products.length === 0)) {
+        setProductList([]);
+        setIsListLoading(false);
+        return;
+      }
+
       if (response.error || !response.products || !response.subCategories) return router.push("/");
 
       if (isFilterApplied) {
-        setFilters(appliedFilters);
         setProductList(response.products);
       } else {
         const filtersFromDB = getFiltersFromProductList(response.products);
@@ -166,18 +173,38 @@ const ListPage = () => {
     ),
     filledProductList: (
       <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 gap-2 mb-14">
-        {productList.map((product) => (
-          <ProductCard
-            key={product.id}
-            imgUrl={[IMAGE_BASE_URL + product.images[0], IMAGE_BASE_URL + product.images[1]]}
-            name={product.name}
-            price={product.price}
-            isAvailable={product.isAvailable}
-            dealPrice={product.salePrice || undefined}
-            specs={product.specialFeatures}
-            url={"/product/" + product.id}
-          />
-        ))}
+        {!isListLoading && productList.length === 0 ? (
+          <div className="col-span-full flex flex-col items-center justify-center py-20">
+            <div className="bg-gray-100 p-6 rounded-full mb-4">
+              <SearchIcon width={48} stroke="#9ca3af" strokeWidth={1.5} />
+            </div>
+            <h2 className="text-2xl font-semibold text-gray-700 mb-2">No results found</h2>
+            <p className="text-gray-500 text-center max-w-md">
+              We couldn't find any products matching &quot;{searchQuery}&quot;. Try adjusting your search or filters.
+            </p>
+            <button
+              onClick={() => {
+                router.push("/");
+              }}
+              className="mt-6 px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+            >
+              Browse All Products
+            </button>
+          </div>
+        ) : (
+          productList.map((product) => (
+            <ProductCard
+              key={product.id}
+              imgUrl={[IMAGE_BASE_URL + product.images[0], IMAGE_BASE_URL + product.images[1]]}
+              name={product.name}
+              price={product.price}
+              isAvailable={product.isAvailable}
+              dealPrice={product.salePrice || undefined}
+              specs={product.specialFeatures}
+              url={"/product/" + product.id}
+            />
+          ))
+        )}
       </div>
     ),
     categoryHasNoProduct: <NoItem pageHeader={getPageHeader()} />,
