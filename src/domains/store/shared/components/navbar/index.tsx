@@ -72,7 +72,7 @@ const StoreNavBar = () => {
         <div className="storeContainer h-[50px] flex justify-between">
           <div className="flex items-center">
             <NavBarCategory isNavbarVisible={!hideNavbar} />
-            <hr className="h-4 border-l border-gray-300 mx-4 hidden sm:block" />
+            <nav className="h-[60px] md:h-[120px] w-full border-b border-gray-200 fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md transition-all duration-300 sm:block" />
             <ul className="hidden lg:flex space-x-2">
               {NAVBAR_ITEMS.map(({ name, link }) => (
                 <li key={name}>
