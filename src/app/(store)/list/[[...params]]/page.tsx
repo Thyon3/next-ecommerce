@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { SearchIcon } from "@/shared/components/icons/svgIcons";
+import { useEffect, useState } from "react";
+
 import { getList } from "@/actions/list/listServices";
 import ProductCard from "@/domains/product/components/productCard";
 import { ProductListSkeleton } from "@/domains/store/productList/components";
@@ -15,6 +16,7 @@ import { DEFAULT_FILTERS, SORT_DATA, sortDropdownData } from "@/domains/store/pr
 import { TFilterBrands, TFilters, TListItem } from "@/domains/store/productList/types";
 import { TPageStatus } from "@/domains/store/productList/types/";
 import { getFiltersFromProductList } from "@/domains/store/productList/utils";
+import { SearchIcon } from "@/shared/components/icons/svgIcons";
 import Button from "@/shared/components/UI/button";
 import DropDownList from "@/shared/components/UI/dropDown";
 import LineList from "@/shared/components/UI/lineList";
@@ -180,7 +182,7 @@ const ListPage = () => {
             </div>
             <h2 className="text-2xl font-semibold text-gray-700 mb-2">No results found</h2>
             <p className="text-gray-500 text-center max-w-md">
-              We couldn't find any products matching &quot;{searchQuery}&quot;. Try adjusting your search or filters.
+              We couldn&apos;t find any products matching &quot;{searchQuery}&quot;. Try adjusting your search or filters.
             </p>
             <button
               onClick={() => {
