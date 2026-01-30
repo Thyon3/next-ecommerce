@@ -26,7 +26,7 @@ const ProductCard = ({
           </span>
         </div>
       )}
-      <div className="imageWrapper hover:border-gray-300 w-full h-[225px] block relative rounded-xl border border-gray-200 overflow-hidden transition-all duration-500">
+      <div className="imageWrapper group relative hover:border-gray-300 w-full h-[225px] block rounded-xl border border-gray-200 overflow-hidden transition-all duration-500">
         <Image
           src={imgUrl[0]}
           alt={name}
@@ -41,6 +41,11 @@ const ProductCard = ({
           sizes="(max-width: 240px)"
           className="object-contain transition-all duration-400 ease-out opacity-0 scale-[0.9]"
         />
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/10 backdrop-blur-[2px]">
+          <button className="bg-white/90 text-black px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:bg-black hover:text-white transition-colors">
+            Quick View
+          </button>
+        </div>
       </div>
       <span className="inline-block text-gray-800 mt-2.5 mb-2 ml-2">{name}</span>
       <div className="h-16 flex flex-col">
