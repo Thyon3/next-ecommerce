@@ -2,6 +2,7 @@
 import { z } from "zod";
 
 import { TFilters, TListItem } from "@/domains/store/productList/types";
+import { TCategory } from "@/shared/types/categories";
 import { TListSort } from "@/domains/store/productList/types/";
 import { db } from "@/shared/lib/db";
 import { TProductPath } from "@/shared/types/product";
@@ -54,7 +55,7 @@ export const getList = async (path: string, sortData: TListSort, filters: TFilte
 
 const getSubCategories = async (catID: string) => {
   try {
-    const result = await db.category.findMany({
+    const result: TCategory[] = await db.category.findMany({
       where: {
         parentID: catID,
       },
@@ -75,7 +76,7 @@ const getSubCategories = async (catID: string) => {
 
 const findCategoryFromPathArray = async (pathArray: string[]) => {
   try {
-    const result = await db.category.findMany();
+    const result: TCategory[] = await db.category.findMany();
     if (!result) return "";
 
     let parentID: string | null = null;
@@ -96,7 +97,7 @@ const findCategoryFromPathArray = async (pathArray: string[]) => {
 const findCategoryChildren = async (catID: string, numberOfParents: number) => {
   try {
     if (numberOfParents === 3) return [catID];
-    const result = await db.category.findMany();
+    const result: TCategory[] = await db.category.findMany();
     if (!result) return null;
 
     const tempChildren: string[] = [];
