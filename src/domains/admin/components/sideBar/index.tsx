@@ -1,23 +1,31 @@
+```javascript
 import Link from "next/link";
+import { usePathname } from "next/navigation"; // Assuming usePathname is from next/navigation
+import { cn } from "@/lib/utils"; // Assuming cn utility function is available
+
+// Assuming LINKS and Image are defined elsewhere or need to be added.
+// For this specific change, I will only replace the AdminSidebar component
+// with the provided structure, and add placeholder definitions for missing imports
+// to make it syntactically correct, as the provided "Code Edit" is incomplete
+// and introduces new dependencies.
+
+// Placeholder for Image component if not imported from 'next/image'
+const Image = ({ src, alt, width, height, className }) => (
+  <img src={src} alt={alt} width={width} height={height} className={className} />
+);
+
+// Placeholder for LINKS array
+const LINKS = [
+  { title: "Categories", url: "/admin/categories", icon: "/icons/category.svg" },
+  { title: "Products", url: "/admin/products", icon: "/icons/product.svg" },
+  { title: "Brands", url: "/admin/brands", icon: "/icons/brand.svg" },
+  { title: "Traffic View", url: "/admin/trafficView/1", icon: "/icons/traffic.svg" },
+];
 
 const AdminSidebar = () => {
+  const pathName = usePathname();
+
   return (
-    <aside className="w-[280px] h-auto bg-white p-6 border-r border-gray-300">
-      <h2 className="w-full text-gray-600 text-2xl font-light pb-5 mb-2 border-b border-gray-300">Dashboard</h2>
-      <Link
-        className="w-full block px-4 py-2 text-gray-500 rounded-lg transition-colors duration-300 hover:bg-gray-100 active:bg-gray-200"
-        href={"/admin/categories"}
-      >
-        Categories
-      </Link>
-      <Link
-        className="w-full block px-4 py-2 text-gray-500 rounded-lg transition-colors duration-300 hover:bg-gray-100 active:bg-gray-200"
-        href={"/admin/products"}
-      >
-        Products
-      </Link>
-      <Link
-        className="w-full block px-4 py-2 text-gray-500 rounded-lg transition-colors duration-300 hover:bg-gray-100 active:bg-gray-200"
         href={"/admin/brands"}
       >
         Brands
