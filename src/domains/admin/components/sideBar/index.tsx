@@ -1,9 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
 import { cn } from "@/shared/utils/styling";
 
 const LINKS = [
@@ -33,23 +31,12 @@ const AdminSidebar = () => {
             )}
           >
             {/* Placeholder icons since we might not have all svgs */}
-            <div className={cn("w-5 h-5 rounded-full", pathName === link.url ? "bg-white/20" : "bg-gray-200")} />
+            <div className={cn("w-5 h-5 rounded-full shrink-0", pathName === link.url ? "bg-white/20" : "bg-gray-200")} />
             {link.title}
           </Link>
         ))}
       </div>
     </aside>
-  );
-};
-
-export default AdminSidebar;      </Link >
-  <Link
-    className="w-full block px-4 py-2 text-gray-500 rounded-lg transition-colors duration-300 hover:bg-gray-100 active:bg-gray-200"
-    href={"/admin/trafficView/1"}
-  >
-    Traffic View
-  </Link>
-    </aside >
   );
 };
 
