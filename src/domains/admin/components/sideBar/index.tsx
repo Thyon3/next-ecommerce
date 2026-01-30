@@ -1,42 +1,55 @@
-```javascript
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation"; // Assuming usePathname is from next/navigation
-import { cn } from "@/lib/utils"; // Assuming cn utility function is available
+import { usePathname } from "next/navigation";
 
-// Assuming LINKS and Image are defined elsewhere or need to be added.
-// For this specific change, I will only replace the AdminSidebar component
-// with the provided structure, and add placeholder definitions for missing imports
-// to make it syntactically correct, as the provided "Code Edit" is incomplete
-// and introduces new dependencies.
+import { cn } from "@/shared/utils/styling";
 
-// Placeholder for Image component if not imported from 'next/image'
-const Image = ({ src, alt, width, height, className }) => (
-  <img src={src} alt={alt} width={width} height={height} className={className} />
-);
-
-// Placeholder for LINKS array
 const LINKS = [
+  { title: "Dashboard", url: "/admin/dashboard", icon: "/icons/dashboard.svg" },
   { title: "Categories", url: "/admin/categories", icon: "/icons/category.svg" },
   { title: "Products", url: "/admin/products", icon: "/icons/product.svg" },
   { title: "Brands", url: "/admin/brands", icon: "/icons/brand.svg" },
-  { title: "Traffic View", url: "/admin/trafficView/1", icon: "/icons/traffic.svg" },
+  { title: "Traffic View", url: "/admin/trafficView/1", icon: "/icons/analytics.svg" },
 ];
 
 const AdminSidebar = () => {
   const pathName = usePathname();
 
   return (
-        href={"/admin/brands"}
-      >
-        Brands
-      </Link>
-      <Link
-        className="w-full block px-4 py-2 text-gray-500 rounded-lg transition-colors duration-300 hover:bg-gray-100 active:bg-gray-200"
-        href={"/admin/trafficView/1"}
-      >
-        Traffic View
-      </Link>
+    <aside className="w-[280px] bg-white border-r border-gray-200 min-h-screen flex flex-col pt-5">
+      <h2 className="px-6 text-xl font-bold text-gray-800 mb-6">Admin Panel</h2>
+      <div className="flex flex-col gap-1 px-3">
+        {LINKS.map((link) => (
+          <Link
+            href={link.url}
+            key={link.title}
+            className={cn(
+              "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-medium",
+              pathName === link.url
+                ? "bg-black text-white shadow-sm"
+                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+            )}
+          >
+            {/* Placeholder icons since we might not have all svgs */}
+            <div className={cn("w-5 h-5 rounded-full", pathName === link.url ? "bg-white/20" : "bg-gray-200")} />
+            {link.title}
+          </Link>
+        ))}
+      </div>
     </aside>
+  );
+};
+
+export default AdminSidebar;      </Link >
+  <Link
+    className="w-full block px-4 py-2 text-gray-500 rounded-lg transition-colors duration-300 hover:bg-gray-100 active:bg-gray-200"
+    href={"/admin/trafficView/1"}
+  >
+    Traffic View
+  </Link>
+    </aside >
   );
 };
 
