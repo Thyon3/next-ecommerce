@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { SearchIcon } from "@/shared/components/icons/svgIcons";
+
 
 import { getList } from "@/actions/list/listServices";
 import ProductCard from "@/domains/product/components/productCard";
