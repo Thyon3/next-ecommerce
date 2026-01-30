@@ -1,8 +1,9 @@
 "use client";
 
+import { ButtonHTMLAttributes } from "react";
+
 import { Spinner } from "@/shared/components/icons/svgIcons";
 import { cn } from "@/shared/utils/styling";
-import { ButtonHTMLAttributes } from "react"; // Added import for ButtonHTMLAttributes
 
 interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "accent";
