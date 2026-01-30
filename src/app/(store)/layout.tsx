@@ -2,8 +2,8 @@
 import { Provider } from "react-redux";
 
 import StoreNavBar from "@/domains/store/shared/components/navbar";
-import BackToTopButton from "@/shared/components/UI/BackToTopButton";
 import Warning from "@/domains/store/shared/components/warning";
+import BackToTopButton from "@/shared/components/UI/BackToTopButton";
 import { shoppingCartStore } from "@/store/shoppingCart";
 
 import StoreFooter from "../../domains/store/shared/components/footer/index";
