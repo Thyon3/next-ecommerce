@@ -11,6 +11,7 @@ import NavBarCategory from "./navCategory";
 import NavBarFavorite from "./navFavorite";
 import NavBarProfile from "./navProfile";
 import NavBarShopping from "./navShopping";
+import SearchBar from "./SearchBar";
 
 const NAVBAR_ITEMS = [
   { name: "Computer", link: "/list/pc-laptops/computer" },
@@ -59,20 +60,7 @@ const StoreNavBar = () => {
           <Link href={"/"} className="mr-0 xl:mr-20 lg:mr-10">
             <Image alt="Bitex Logo" src={"/images/logo.png"} width={125} height={40} quality={100} />
           </Link>
-          <div className="h-11 relative flex-1 mx-6 sm:mx-10">
-            <input
-              type="text"
-              className="text-gray-800 hidden sm:block pl-4 size-full border-gray-300 focus:border-gray-500 border rounded-lg outline-gray-500 sm:pl-12"
-              placeholder="Search"
-            />
-            <Image
-              src="/icons/searchIcon.svg"
-              width={16}
-              height={16}
-              alt="Search"
-              className="absolute top-3.5 left-5 hidden sm:block"
-            />
-          </div>
+          <SearchBar />
           <div className="text-gray-500 flex pr-2 md:pr-0">
             <NavBarProfile />
             <NavBarFavorite />
