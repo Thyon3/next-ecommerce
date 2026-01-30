@@ -1,16 +1,23 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-import { SearchIcon, XIcon } from "@/shared/components/icons/svgIcons";
+import { SearchIcon, Spinner, XIcon } from "@/shared/components/icons/svgIcons";
 
 const SearchBar = () => {
     const [query, setQuery] = useState("");
+    const [isSearching, setIsSearching] = useState(false);
     const router = useRouter();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        setIsSearching(false);
+    }, [searchParams]);
 
     const handleSearch = () => {
         if (query.trim()) {
+            setIsSearching(true);
             router.push(`/list/search?q=${encodeURIComponent(query)}`);
         }
     };
@@ -34,14 +41,18 @@ const SearchBar = () => {
             <div className="absolute top-3.5 left-5 hidden sm:block pointer-events-none">
                 <SearchIcon width={16} stroke="#6b7280" strokeWidth={1.5} />
             </div>
-            {query && (
+            {isSearching ? (
+                <div className="absolute top-3.5 right-4 hidden sm:block animate-spin">
+                    <Spinner width={16} stroke="#6b7280" />
+                </div>
+            ) : query ? (
                 <button
                     onClick={() => setQuery("")}
                     className="absolute top-3.5 right-4 hidden sm:block text-gray-500 hover:text-gray-700"
                 >
                     <XIcon width={16} stroke="currentColor" strokeWidth={1.5} />
                 </button>
-            )}
+            ) : null}
         </div>
     );
 };
