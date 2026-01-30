@@ -28,12 +28,14 @@ const Button = ({ children, className, variant = "primary", size = "medium", isL
       {...props}
       disabled={disabled || isLoading}
       className={cn(
-        "flex cursor-pointer bg-white border border-gray-300 items-center justify-center px-4 py-2 transition-all gap-4 duration-300 text-gray-700 rounded-lg disabled:cursor-default hover:bg-gray-100 active:bg-gray-200 disabled:bg-gray-100",
-        sizeClasses[size],
+        "rounded-[4px] font-medium transition-colors duration-300 flex items-center justify-center gap-2",
+        variants[variant],
+        sizes[size],
+        (disabled || isLoading) && "opacity-50 cursor-not-allowed disabled:bg-gray-100",
         className
       )}
-      onClick={onClick}
     >
+      {isLoading && <Spinner width={16} stroke="currentColor" />}
       {children}
     </button>
   );
