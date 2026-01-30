@@ -2,8 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { TProductCard } from "@/shared/types/common";
-import { cn } from "@/shared/utils/styling";
-
 const ProductCard = ({
   name,
   imgUrl,
@@ -12,7 +10,6 @@ const ProductCard = ({
   specs,
   url,
   isAvailable = true,
-  staticWidth = false,
 }: TProductCard) => {
   return (
     <Link
