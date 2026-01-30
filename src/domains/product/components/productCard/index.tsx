@@ -17,10 +17,7 @@ const ProductCard = ({
   return (
     <Link
       href={url}
-      className={cn(
-        "bg-white rounded-xl p-2 transition-all duration-500 relative hover:drop-shadow-sm hover:[&_.imageWrapper>img:last-child]:opacity-100 hover:[&_.imageWrapper>img:last-child]:scale-[1.05]",
-        staticWidth && "min-w-64"
-      )}
+      className="flex flex-col gap-2 rounded-lg bg-white p-3 shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.02]"
     >
       {!isAvailable && (
         <div className="flex left-2 right-2 bottom-2 top-2 bg-white/40 backdrop-blur-[1px] absolute z-[1] items-center justify-center rounded-lg">
