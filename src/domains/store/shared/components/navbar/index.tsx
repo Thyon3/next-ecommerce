@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { cn } from "@/shared/utils/styling";
@@ -26,6 +27,7 @@ const NAVBAR_ITEMS = [
 
 const StoreNavBar = () => {
   const [hideNavbar, setHideNavbar] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     let prevPositionY = 0;
@@ -78,7 +80,10 @@ const StoreNavBar = () => {
                 <li key={name}>
                   <Link
                     href={link}
-                    className="px-4 py-2 rounded-md text-sm text-gray-700 transition-colors hover:bg-gray-100 active:bg-gray-200"
+                    className={cn(
+                      "px-4 py-2 rounded-md text-sm transition-colors hover:bg-gray-100 active:bg-gray-200",
+                      pathname === link ? "text-black font-semibold bg-gray-50" : "text-gray-700"
+                    )}
                   >
                     {name}
                   </Link>
