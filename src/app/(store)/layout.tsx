@@ -18,8 +18,8 @@ const StoreLayout = ({ children }: { children: React.ReactNode }) => {
           {children}
         </main>
         <Warning />
+        <BackToTopButton />
       </Provider>
-      <BackToTopButton />
       <Footer />
     </>
   );
