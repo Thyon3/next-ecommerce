@@ -4,7 +4,7 @@
 
 ## Overview
 
-Bitex is a full-stack E-Commerce project developed with Next.js 14, featuring a range of technologies including React, Typescript, Tailwindcss, Prisma, MongoDB, NextAuth, and Redux.
+Thyonx is a full-stack E-Commerce project developed with Next.js 14, featuring a range of technologies including React, Typescript, Tailwindcss, Prisma, MongoDB, NextAuth, and Redux.
 
 ⚠️ `Note:` This project is a personal endeavor created for portfolio purposes and is not associated with any real business or project.
 

@@ -60,7 +60,7 @@ const StoreNavBar = () => {
       <section className="w-full">
         <div className="storeContainer w-full relative flex justify-between items-center">
           <Link href={"/"} className="mr-0 xl:mr-20 lg:mr-10">
-            <Image alt="Bitex Logo" src={"/images/logo.png"} width={125} height={40} quality={100} />
+            <Image alt="Thyonx Logo" src={"/images/logo.png"} width={125} height={40} quality={100} />
           </Link>
           <SearchBar />
           <div className="text-gray-500 flex pr-2 md:pr-0">
