@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { TProductCard } from "@/shared/types/common";
+import { cn } from "@/shared/utils/styling";
+
 const ProductCard = ({
   name,
   imgUrl,
@@ -10,11 +12,15 @@ const ProductCard = ({
   specs,
   url,
   isAvailable = true,
+  staticWidth = false,
 }: TProductCard) => {
   return (
     <Link
       href={url}
-      className="flex flex-col gap-2 rounded-lg bg-white p-3 shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.02]"
+      className={cn(
+        "bg-white rounded-xl p-2 transition-all duration-500 relative hover:drop-shadow-sm hover:[&_.imageWrapper>img:last-child]:opacity-100 hover:[&_.imageWrapper>img:last-child]:scale-[1.05]",
+        staticWidth && "min-w-64"
+      )}
     >
       {!isAvailable && (
         <div className="flex left-2 right-2 bottom-2 top-2 bg-white/40 backdrop-blur-[1px] absolute z-[1] items-center justify-center rounded-lg">
@@ -23,7 +29,7 @@ const ProductCard = ({
           </span>
         </div>
       )}
-      <div className="imageWrapper group relative hover:border-gray-300 w-full h-[225px] block rounded-xl border border-gray-200 overflow-hidden transition-all duration-500">
+      <div className="imageWrapper hover:border-gray-300 w-full h-[225px] block relative rounded-xl border border-gray-200 overflow-hidden transition-all duration-500">
         <Image
           src={imgUrl[0]}
           alt={name}
@@ -38,11 +44,6 @@ const ProductCard = ({
           sizes="(max-width: 240px)"
           className="object-contain transition-all duration-400 ease-out opacity-0 scale-[0.9]"
         />
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/10 backdrop-blur-[2px]">
-          <button className="bg-white/90 text-black px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:bg-black hover:text-white transition-colors">
-            Quick View
-          </button>
-        </div>
       </div>
       <span className="inline-block text-gray-800 mt-2.5 mb-2 ml-2">{name}</span>
       <div className="h-16 flex flex-col">
