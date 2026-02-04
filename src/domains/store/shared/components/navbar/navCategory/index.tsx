@@ -43,8 +43,8 @@ const NavBarCategory = ({ isNavbarVisible: isNavbarHide }: TProps) => {
         className={cn(
           "w-auto px-4 py-2 border rounded-md transition-all duration-300",
           isActive
-            ? "border-gray-200 bg-gray-100"
-            : "border-white bg-white hover:border-gray-200 hover:bg-gray-100 active:border-gray-300 active:bg-gray-200"
+            ? "border-gray-200 bg-gray-100 text-gray-800"
+            : "border-gray-200 bg-white text-gray-800 hover:border-gray-300 hover:bg-gray-100 active:border-gray-300 active:bg-gray-200"
         )}
       >
         <ListIcon width={12} className="fill-gray-600" />

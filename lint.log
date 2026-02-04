@@ -1,0 +1,21 @@
+
+> bitex@0.1.0 lint
+> next lint
+
+
+./src/app/(store)/list/[[...params]]/page.tsx
+8:1  Error: `@/shared/components/icons/svgIcons` import should occur after import of `@/domains/store/productList/utils`  import/order
+183:24  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/domains/admin/components/sideBar/index.tsx
+4:1  Error: There should be at least one empty line between import groups  import/order
+
+./src/domains/product/components/productCard/index.tsx
+5:10  Error: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
+15:3  Error: 'staticWidth' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/shared/components/UI/button/index.tsx
+4:1  Error: There should be at least one empty line between import groups  import/order
+5:1  Error: `react` import should occur before import of `@/shared/components/icons/svgIcons`  import/order
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
