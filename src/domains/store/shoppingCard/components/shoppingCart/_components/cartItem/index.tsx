@@ -53,8 +53,8 @@ const CartItem = ({ data, onLinkClicked }: TProps) => {
           <span className="text-sm text-gray-500 ml-3">
             {quantity > 1
               ? `${quantity} x ${currentPrice.toLocaleString("en-us", {
-                  maximumFractionDigits: 2,
-                })} €`
+                maximumFractionDigits: 2,
+              })} €`
               : ""}{" "}
           </span>
         </div>
