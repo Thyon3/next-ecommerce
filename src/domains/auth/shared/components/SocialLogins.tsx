@@ -4,6 +4,8 @@ import React from "react";
 import Button from "@/shared/components/UI/button";
 import { GoogleIcon, AppleIcon } from "@/shared/components/icons/svgIcons";
 
+import { signIn } from "next-auth/react";
+
 const SocialLogins = () => {
     return (
         <div className="flex flex-col gap-3 w-full mt-6">
@@ -16,7 +18,7 @@ const SocialLogins = () => {
                 <Button
                     variant="secondary"
                     className="w-full flex items-center justify-center gap-2 py-3 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 rounded-xl transition-all duration-300"
-                    onClick={() => { }}
+                    onClick={() => signIn("google")}
                 >
                     <GoogleIcon width={20} />
                     <span className="font-semibold text-sm">Google</span>
@@ -24,7 +26,7 @@ const SocialLogins = () => {
                 <Button
                     variant="secondary"
                     className="w-full flex items-center justify-center gap-2 py-3 bg-black text-white hover:bg-gray-900 rounded-xl transition-all duration-300"
-                    onClick={() => { }}
+                    onClick={() => signIn("apple")}
                 >
                     <AppleIcon width={18} fill="white" />
                     <span className="font-semibold text-sm">Apple</span>
@@ -33,5 +35,6 @@ const SocialLogins = () => {
         </div>
     );
 };
+
 
 export default SocialLogins;

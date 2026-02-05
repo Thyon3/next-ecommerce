@@ -9,6 +9,8 @@ import Input from "@/shared/components/UI/input";
 import AuthLayout from "@/domains/auth/shared/components/AuthLayout";
 import SocialLogins from "@/domains/auth/shared/components/SocialLogins";
 
+import { register } from "@/actions/auth/register";
+
 const SignUp = () => {
     const router = useRouter();
     const [error, setError] = useState("");
@@ -31,20 +33,19 @@ const SignUp = () => {
             return;
         }
 
-        // Simulate API call or integrate with your backend action
-        try {
-            // const res = await registerUser(signUpData);
-            // if (res.ok) router.push("/login");
-            console.log("Signing up...", signUpData);
-            setTimeout(() => {
-                setLoading(false);
-                router.push("/login");
-            }, 1500);
-        } catch (err) {
-            setError("Something went wrong. Please try again.");
-            setLoading(false);
-        }
+        register(signUpData)
+            .then((data) => {
+                if (data.error) {
+                    setError(data.error);
+                }
+                if (data.success) {
+                    router.push("/login");
+                }
+            })
+            .catch(() => setError("Something went wrong!"))
+            .finally(() => setLoading(false));
     };
+
 
     return (
         <AuthLayout

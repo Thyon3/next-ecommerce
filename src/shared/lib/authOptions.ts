@@ -1,4 +1,5 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import bcrypt from "bcrypt";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -25,12 +26,15 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user || !user?.hashedPassword) {
-          throw new Error("Invalid credentials");
+          throw new Error("Email does not exist");
         }
 
-        if (credentials.password !== user.hashedPassword) {
-          throw new Error("Invalid credentials");
+        const passwordsMatch = await bcrypt.compare(credentials.password, user.hashedPassword);
+
+        if (!passwordsMatch) {
+          throw new Error("Incorrect password");
         }
+
         return user;
       },
     }),
@@ -41,3 +45,4 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === "development",
 };
+
