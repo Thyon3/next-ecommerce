@@ -392,6 +392,34 @@ export const DeleteIcon = ({ width, fill, className }: TProps) => {
   });
 };
 
+export const GoogleIcon = ({ width, className }: TProps) => {
+  return createIcon({
+    width,
+    viewBox: "0 0 24 24",
+    svgData: (
+      <path
+        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+        fill="#4285F4"
+        className={className}
+      />
+    ),
+  });
+};
+
+export const AppleIcon = ({ width, fill = "currentColor", className }: TProps) => {
+  return createIcon({
+    width,
+    viewBox: "0 0 384 512",
+    svgData: (
+      <path
+        d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 21.8-88.5 21.8-11.4 0-51.1-20.8-82.3-20.8-65.3 0-112 43.1-112 110.1 0 31.9 6 63.9 17.5 94.7 17.2 45.4 69.8 116.6 120.4 116.6 24.3 0 46.2-14.7 75.2-14.7 29.8 0 54 14.7 76 14.7 65.6 0 102-86.8 102-86.8-1.5-.7-80.1-30.8-80.6-111.2V268.7zM263.3 53.4c29.1-34.9 25-78.5 25-78.5C252.1 2.5 203.2 26 183 51.1c-28.1 33.3-24 74.5-24 74.5 35.8 4 82.5-24.3 104.3-52.2z"
+        fill={fill}
+        className={className}
+      />
+    ),
+  });
+};
+
 export const Spinner = ({ width, stroke, className }: TProps) => {
   return createIcon({
     width,
@@ -408,3 +436,4 @@ export const Spinner = ({ width, stroke, className }: TProps) => {
     ),
   });
 };
+
