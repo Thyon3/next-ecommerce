@@ -10,11 +10,19 @@ import CategoryListItem from "./catListItem";
 
 export const HomeCategoryList = () => {
   const [categories, setCategories] = useState<TGroupJSON[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const getCategoriesDB = async () => {
-      const result = await getAllCategoriesJSON();
-      if (result.res) {
-        setCategories(result.res);
+      try {
+        const result = await getAllCategoriesJSON();
+        if (result.res) {
+          setCategories(result.res);
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      } finally {
+        setLoading(false);
       }
     };
     getCategoriesDB();
@@ -23,8 +31,10 @@ export const HomeCategoryList = () => {
   return (
     <div className="min-w-[256px] absolute h-[500px] hidden lg:block bg-white mr-4 rounded-xl px-6 text-gray-800 shadow-md z-[3]">
       <ul className="mt-3">
-        {!categories || categories.length === 0 ? (
+        {loading ? (
           <div className="flex flex-col gap-7 justify-center mt-5">{Skeletons()}</div>
+        ) : categories.length === 0 ? (
+          <div className="text-gray-500 text-center mt-10">No categories found</div>
         ) : (
           categories.map((item, index) => (
             <CategoryListItem

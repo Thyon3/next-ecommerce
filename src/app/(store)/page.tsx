@@ -12,9 +12,7 @@ import {
 } from "@/domains/store/homePage/components";
 import { threeSaleCards, twoSaleCards } from "@/domains/store/homePage/constants";
 
-export const metadata: Metadata = {
-  title: "BITEX - Homepage",
-};
+title: "THYONX"
 
 export default function Home() {
   return (
