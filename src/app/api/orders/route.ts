@@ -18,8 +18,29 @@ export async function POST(req: Request) {
             return new NextResponse("Invalid order data", { status: 400 });
         }
 
-        // Use a transaction to ensure atomic order creation
+        // Use a transaction to ensure atomic order creation and stock decrement
         const order = await db.$transaction(async (tx) => {
+            // Check stock for each item
+            for (const item of items) {
+                const product = await tx.product.findUnique({
+                    where: { id: item.productId }
+                });
+
+                if (!product || product.stock < item.quantity) {
+                    throw new Error(`Insufficient stock for product: ${product?.name || item.productId}`);
+                }
+
+                // Decrement stock
+                await tx.product.update({
+                    where: { id: item.productId },
+                    data: {
+                        stock: {
+                            decrement: item.quantity
+                        }
+                    }
+                });
+            }
+
             const newOrder = await tx.order.create({
                 data: {
                     userId: (session.user as any).id || (await tx.user.findUnique({ where: { email: session.user?.email || "" } }))?.id,
