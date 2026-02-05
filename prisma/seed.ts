@@ -1,96 +1,138 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Role, OrderStatus } from "@prisma/client";
+import bcrypt from "bcrypt";
 
-const prisma = new PrismaClient();
+const db = new PrismaClient();
 
 async function main() {
-    console.log('Start seeding...');
+    try {
+        // Cleanup
+        await db.wishlist.deleteMany();
+        await db.review.deleteMany();
+        await db.orderItem.deleteMany();
+        await db.order.deleteMany();
+        await db.product.deleteMany();
+        await db.category.deleteMany();
+        await db.brand.deleteMany();
+        await db.user.deleteMany();
 
-    // 1. Create Brands
-    const apple = await prisma.brand.upsert({
-        where: { name: 'Apple' },
-        update: {},
-        create: {
-            name: 'Apple',
-        },
-    });
+        // Create Admin and User
+        const hashedPassword = await bcrypt.hash("password123", 12);
 
-    const samsung = await prisma.brand.upsert({
-        where: { name: 'Samsung' },
-        update: {},
-        create: {
-            name: 'Samsung',
-        },
-    });
-
-    const nike = await prisma.brand.upsert({
-        where: { name: 'Nike' },
-        update: {},
-        create: {
-            name: 'Nike',
-        },
-    });
-
-    console.log('Created brands:', { apple, samsung, nike });
-
-    // 2. Create Categories
-    // Electronics
-    const electronics = await prisma.category.create({
-        data: {
-            name: 'Electronics',
-            url: 'electronics',
-            iconUrl: 'https://example.com/icons/electronics.png',
-            iconSize: [24, 24],
-            products: {
-                create: [
-                    {
-                        name: 'iPhone 15',
-                        price: 999,
-                        brandID: apple.id,
-                        images: ['https://example.com/iphone.jpg'],
-                        // Specs are structured differently in the schema provided 
-                        // The schema says `specs ProductSpec[]` where ProductSpec is a type.
-                        specs: [
-                            { specGroupID: 'Display', specValues: ['6.1 inch OLED'] }
-                        ]
-                    },
-                ],
+        const admin = await db.user.create({
+            data: {
+                name: "Admin User",
+                email: "admin@bitex.com",
+                hashedPassword,
+                role: Role.ADMIN,
             },
-        },
-    });
+        });
 
-    // Clothing
-    const clothing = await prisma.category.create({
-        data: {
-            name: 'Clothing',
-            url: 'clothing',
-            iconUrl: 'https://example.com/icons/clothing.png',
-            iconSize: [24, 24],
-            products: {
-                create: [
-                    {
-                        name: 'Air Force 1',
-                        price: 120,
-                        brandID: nike.id,
-                        images: ['https://example.com/nike.jpg'],
-                        specs: [
-                            { specGroupID: 'Material', specValues: ['Leather'] }
-                        ]
-                    },
-                ],
+        const user = await db.user.create({
+            data: {
+                name: "Regular User",
+                email: "user@bitex.com",
+                hashedPassword,
+                role: Role.USER,
+                address: {
+                    street: "123 Main St",
+                    city: "New York",
+                    state: "NY",
+                    postalCode: "10001",
+                    country: "USA",
+                },
             },
-        },
-    });
+        });
 
-    console.log('Created categories:', { electronics, clothing });
+        // Create Brands
+        const apple = await db.brand.create({ data: { name: "Apple" } });
+        const samsung = await db.brand.create({ data: { name: "Samsung" } });
+        const sony = await db.brand.create({ data: { name: "Sony" } });
 
-    console.log('Seeding finished.');
+        // Create Categories
+        const electronics = await db.category.create({
+            data: {
+                name: "Electronics",
+                url: "electronics",
+            },
+        });
+
+        const smartphones = await db.category.create({
+            data: {
+                name: "Smartphones",
+                url: "smartphones",
+                parentID: electronics.id,
+            },
+        });
+
+        // Create Products
+        const iphone = await db.product.create({
+            data: {
+                name: "iPhone 15 Pro",
+                desc: "The latest iPhone with titanium design.",
+                price: 999.99,
+                categoryID: smartphones.id,
+                brandID: apple.id,
+                images: ["https://example.com/iphone15.jpg"],
+                specialFeatures: ["Titanium", "A17 Pro chip"],
+            },
+        });
+
+        const s23 = await db.product.create({
+            data: {
+                name: "Samsung Galaxy S23 Ultra",
+                desc: "The ultimate Android smartphone.",
+                price: 1199.99,
+                categoryID: smartphones.id,
+                brandID: samsung.id,
+                images: ["https://example.com/s23ultra.jpg"],
+                specialFeatures: ["200MP Camera", "S Pen included"],
+            },
+        });
+
+        // Create Reviews
+        await db.review.create({
+            data: {
+                rating: 5,
+                comment: "Amazing phone! Highly recommend.",
+                userId: user.id,
+                productId: iphone.id,
+            },
+        });
+
+        // Create Wishlist
+        await db.wishlist.create({
+            data: {
+                userId: user.id,
+                productId: s23.id,
+            },
+        });
+
+        // Create Order
+        await db.order.create({
+            data: {
+                userId: user.id,
+                totalAmount: 999.99,
+                status: OrderStatus.DELIVERED,
+                shippingAddress: user.address!,
+                items: {
+                    create: [
+                        {
+                            productId: iphone.id,
+                            quantity: 1,
+                            price: 999.99,
+                        },
+                    ],
+                },
+            },
+        });
+
+        console.log("Seed data created successfully!");
+    } catch (error) {
+        console.error("Error seeding data:", error);
+        process.exit(1);
+    } finally {
+        await db.$disconnect();
+    }
 }
 
-main()
-    .catch((e) => {
-        console.error(e);
-        process.exit(1);
-    })
-    .finally(async () => {
-        await prisma.$disconnect();
-    });
+main();
