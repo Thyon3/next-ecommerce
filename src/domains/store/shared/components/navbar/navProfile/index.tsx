@@ -44,7 +44,7 @@ const NavBarProfile = () => {
             Sign In
           </Button>
         </Link>
-        <Link href="/login" className="w-full">
+        <Link href="/signup" className="w-full">
           <Button
             variant="primary"
             size="small"
