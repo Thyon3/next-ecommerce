@@ -40,6 +40,9 @@ const cartSlice = createSlice({
         item.productId === action.payload.productId ? (item.quantity += action.payload.amount) : ""
       );
     },
+    clearCart: (state: TCartState) => {
+      state.items = [];
+    },
   },
 });
 
@@ -56,4 +59,4 @@ shoppingCartStore.subscribe(() => {
 export type RootState = ReturnType<typeof shoppingCartStore.getState>;
 export type AppDispatch = typeof shoppingCartStore.dispatch;
 
-export const { add, remove, modifyQuantity, toggleCart } = cartSlice.actions;
+export const { add, remove, modifyQuantity, toggleCart, clearCart } = cartSlice.actions;
