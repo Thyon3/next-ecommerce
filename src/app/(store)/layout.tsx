@@ -6,6 +6,7 @@ import Warning from "@/domains/store/shared/components/warning";
 import BackToTopButton from "@/shared/components/UI/BackToTopButton";
 import { shoppingCartStore } from "@/store/shoppingCart";
 import ComparisonTray from "@/domains/product/components/ComparisonTray";
+import NewsletterPopup from "@/domains/store/shared/components/NewsletterPopup";
 
 import StoreFooter from "../../domains/store/shared/components/footer/index";
 
@@ -21,6 +22,7 @@ const StoreLayout = ({ children }: { children: React.ReactNode }) => {
         <Warning />
         <BackToTopButton />
         <ComparisonTray />
+        <NewsletterPopup />
       </Provider>
     </>
   );
