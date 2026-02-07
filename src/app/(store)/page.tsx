@@ -13,6 +13,7 @@ import {
 import { threeSaleCards, twoSaleCards } from "@/domains/store/homePage/constants";
 import RecentlyViewed from "@/domains/product/components/RecentlyViewed";
 import Recommendations from "@/domains/product/components/Recommendations";
+import FlashSaleBanner from "@/domains/product/components/FlashSaleBanner";
 
 title: "THYONX"
 
@@ -26,6 +27,9 @@ export default function Home() {
         </div>
         <WideCardRow cards={threeSaleCards} />
         <TodayDealCards />
+        <div className="my-10">
+          <FlashSaleBanner />
+        </div>
         <WideCardRow cards={twoSaleCards} />
         <CollectionCards />
         <TopSellingProductsList />
