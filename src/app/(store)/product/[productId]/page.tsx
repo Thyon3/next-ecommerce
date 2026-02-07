@@ -15,6 +15,8 @@ import Popup from "@/shared/components/UI/popup";
 import { SK_Box } from "@/shared/components/UI/skeleton";
 import { TProductPageInfo } from "@/shared/types/product";
 import { addRecentlyViewed } from "@/shared/utils/localStorage";
+import { usePageTracking } from "@/shared/hooks/usePageTracking";
+import { PageType } from "@prisma/client";
 
 const ProductPage = () => {
   const router = useRouter();
@@ -22,6 +24,8 @@ const ProductPage = () => {
   const [productInfo, setProductInfo] = useState<TProductPageInfo | null | undefined>(null);
   const [similarProducts, setSimilarProducts] = useState<any[]>([]);
   const [showReviewForm, setShowReviewForm] = useState(false);
+
+  usePageTracking(PageType.PRODUCT, productId?.toString());
 
   if (!productId) router.push("/");
 
