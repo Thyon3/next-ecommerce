@@ -197,6 +197,7 @@ const ListPage = () => {
           productList.map((product) => (
             <ProductCard
               key={product.id}
+              id={product.id}
               imgUrl={[IMAGE_BASE_URL + product.images[0], IMAGE_BASE_URL + product.images[1]]}
               name={product.name}
               price={product.price}
