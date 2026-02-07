@@ -90,6 +90,7 @@ const ProductPage = () => {
                   name: productInfo.name,
                   price: productInfo.price,
                   dealPrice: productInfo.salePrice || undefined,
+                  saleExpiry: productInfo.saleExpiry,
                   shortDesc: productInfo.desc || "",
                   specialFeatures: productInfo.specialFeatures,
                   reviewsCount: productInfo.Review?.length || 0,

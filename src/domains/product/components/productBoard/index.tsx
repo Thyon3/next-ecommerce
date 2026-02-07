@@ -9,9 +9,35 @@ import { StarIcon, HeartIcon } from "@/shared/components/icons/svgIcons";
 import { TProductBoard } from "@/shared/types/product";
 import { TCartItem } from "@/shared/types/shoppingCart";
 
+import { useEffect } from "react";
+
 const ProductBoard = ({ boardData }: { boardData: TProductBoard }) => {
-  const { name, id, isAvailable, specialFeatures, price, shortDesc, dealPrice, defaultQuantity } = boardData;
+  const { name, id, isAvailable, specialFeatures, price, shortDesc, dealPrice, defaultQuantity, saleExpiry } = boardData;
   const [quantity, setQuantity] = useState(defaultQuantity > 1 ? defaultQuantity : 1);
+  const [timeLeft, setTimeLeft] = useState<{ h: number, m: number, s: number } | null>(null);
+
+  useEffect(() => {
+    if (!saleExpiry) return;
+
+    const timer = setInterval(() => {
+      const now = new Date();
+      const expiry = new Date(saleExpiry);
+      const diff = expiry.getTime() - now.getTime();
+
+      if (diff <= 0) {
+        setTimeLeft(null);
+        clearInterval(timer);
+      } else {
+        setTimeLeft({
+          h: Math.floor((diff / (1000 * 60 * 60))),
+          m: Math.floor((diff / 1000 / 60) % 60),
+          s: Math.floor((diff / 1000) % 60)
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [saleExpiry]);
 
   const handleQuantityChange = (isReducing: boolean) => {
     setQuantity((prev) => {
@@ -62,16 +88,24 @@ const ProductBoard = ({ boardData }: { boardData: TProductBoard }) => {
 
       {dealPrice && (
         <div className="mb-5 text-sm">
-          <span className="text-white rounded-sm bg-bitex-red-500 px-3 py-1">
-            {`
-            Save
-            ${(price - dealPrice).toLocaleString("en-us", {
-              minimumIntegerDigits: 2,
-              minimumFractionDigits: 2,
-            })} €
-            `}
-          </span>
-          <span className="mt-[10px] block text-gray-800">Was {price} €</span>
+          <div className="flex items-center gap-4 mb-3">
+            <span className="text-white rounded-sm bg-bitex-red-500 px-3 py-1 font-bold">
+              {`
+                Save
+                ${(price - dealPrice).toLocaleString("en-us", {
+                minimumIntegerDigits: 2,
+                minimumFractionDigits: 2,
+              })} €
+                `}
+            </span>
+            {timeLeft && (
+              <div className="flex items-center gap-1.5 text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded border border-red-100 animate-pulse">
+                <span className="uppercase tracking-tighter">Offer Ends:</span>
+                <span>{String(timeLeft.h).padStart(2, '0')}:{String(timeLeft.m).padStart(2, '0')}:{String(timeLeft.s).padStart(2, '0')}</span>
+              </div>
+            )}
+          </div>
+          <span className="mt-[10px] block text-gray-800 font-medium">Was <span className="line-through text-gray-400">{price} €</span></span>
         </div>
       )}
       <hr className="w-full border-t border-gray-300 mb-5" />
