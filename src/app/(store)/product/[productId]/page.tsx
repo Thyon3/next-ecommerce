@@ -14,6 +14,7 @@ import { LikeIcon, MinusIcon } from "@/shared/components/icons/svgIcons";
 import Popup from "@/shared/components/UI/popup";
 import { SK_Box } from "@/shared/components/UI/skeleton";
 import { TProductPageInfo } from "@/shared/types/product";
+import { addRecentlyViewed } from "@/shared/utils/localStorage";
 
 const ProductPage = () => {
   const router = useRouter();
@@ -37,6 +38,9 @@ const ProductPage = () => {
 
   useEffect(() => {
     refreshData();
+    if (productId) {
+      addRecentlyViewed(productId.toString());
+    }
   }, [productId, router]);
 
   if (productInfo === undefined) return "";
