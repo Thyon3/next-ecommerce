@@ -85,6 +85,8 @@ export type TCartListItemDB = {
   images: string[];
   price: number;
   salePrice: number | null;
+  isAvailable: boolean;
+  specialFeatures: string[];
 };
 
 export type TSpecification = {
