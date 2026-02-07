@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import StatsCard from '@/domains/admin/components/StatsCard';
 import RevenueChart from '@/domains/admin/components/RevenueChart';
+import CustomerInsights from '@/domains/admin/components/CustomerInsights';
 
 interface DashboardStats {
     totalOrders: number;
@@ -72,7 +73,14 @@ const DashboardPage = () => {
                 />
             </div>
 
-            <RevenueChart />
+            <div className="flex flex-col lg:flex-row gap-6">
+                <div className="flex-[2]">
+                    <RevenueChart />
+                </div>
+                <div className="flex-1">
+                    <CustomerInsights />
+                </div>
+            </div>
 
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                 <div className="p-6 border-b border-gray-100 flex justify-between items-center">
