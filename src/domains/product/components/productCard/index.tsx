@@ -1,10 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 import { TProductCard } from "@/shared/types/common";
 import { cn } from "@/shared/utils/styling";
 
 const ProductCard = ({
+  id,
   name,
   imgUrl,
   price,
@@ -14,6 +16,28 @@ const ProductCard = ({
   isAvailable = true,
   staticWidth = false,
 }: TProductCard) => {
+  const [isInWishlist, setIsInWishlist] = useState(false);
+
+  const handleWishlist = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      if (isInWishlist) {
+        await fetch(`/api/wishlist/${id}`, { method: 'DELETE' });
+        setIsInWishlist(false);
+      } else {
+        await fetch('/api/wishlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId: id }),
+        });
+        setIsInWishlist(true);
+      }
+    } catch (error) {
+      console.error("Wishlist error", error);
+    }
+  };
   return (
     <Link
       href={url}
@@ -83,7 +107,13 @@ const ProductCard = ({
           )}
         </div>
         <div className="flex-grow text-right">
-          <button className="cursor-pointer size-9 border-none bg-no-repeat bg-center rounded-sm opacity-60 transition-opacity duration-300 hover:opacity-100 bg-black/0 bg-[url('/icons/heartIcon.svg')] bg-[length:20px_18px]" />
+          <button
+            onClick={handleWishlist}
+            className={cn(
+              "cursor-pointer size-9 border-none bg-no-repeat bg-center rounded-sm transition-all duration-300 bg-[length:20px_18px]",
+              isInWishlist ? "bg-[url('/icons/heartIcon_active.svg')] opacity-100" : "bg-[url('/icons/heartIcon.svg')] opacity-60 hover:opacity-100"
+            )}
+          />
         </div>
       </div>
     </Link>
