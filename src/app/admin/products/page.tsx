@@ -20,6 +20,7 @@ const initialForm: TAddProductFormValues = {
   images: [],
   categoryID: "",
   specifications: [],
+  stock: 0,
 };
 
 const AdminProducts = () => {
@@ -27,6 +28,7 @@ const AdminProducts = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [formValues, setFormValues] = useState<TAddProductFormValues>(initialForm);
   const [productsList, setProductsList] = useState<TProductListItem[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     getProductsList();
@@ -50,16 +52,28 @@ const AdminProducts = () => {
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="flex items-center h-20 mb-8">
+    <div className="flex flex-col p-8">
+      <div className="flex items-center justify-between h-20 mb-8 gap-4">
+        <h1 className="text-2xl font-bold">Product Management</h1>
+        <div className="flex-grow max-w-md">
+          <input
+            type="text"
+            placeholder="Search products..."
+            className="w-full border rounded-lg p-2.5 text-sm focus:ring-1 focus:ring-black outline-none"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
         <Button onClick={() => setShowProductWindow(true)}>Add new product</Button>
       </div>
-      <div className="flex flex-col text-sm text-gray-800">
+      <div className="flex flex-col text-sm text-gray-800 gap-2">
         {productsList.length ? (
           <>
-            {productsList.map((product) => (
-              <ProductListItem key={product.id} data={product} requestReload={getProductsList} />
-            ))}
+            {productsList
+              .filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+              .map((product) => (
+                <ProductListItem key={product.id} data={product} requestReload={getProductsList} />
+              ))}
           </>
         ) : (
           <div>There is no product!</div>
