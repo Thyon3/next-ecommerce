@@ -10,6 +10,8 @@ const LINKS = [
   { title: "Categories", url: "/admin/categories", icon: "/icons/category.svg" },
   { title: "Products", url: "/admin/products", icon: "/icons/product.svg" },
   { title: "Brands", url: "/admin/brands", icon: "/icons/brand.svg" },
+  { title: "Orders", url: "/admin/orders", icon: "/icons/order.svg" },
+  { title: "Low Stock", url: "/admin/low-stock", icon: "/icons/stock.svg" },
   { title: "Traffic View", url: "/admin/trafficView/1", icon: "/icons/analytics.svg" },
 ];
 
