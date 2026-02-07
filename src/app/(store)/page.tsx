@@ -11,6 +11,8 @@ import {
   WideCardRow,
 } from "@/domains/store/homePage/components";
 import { threeSaleCards, twoSaleCards } from "@/domains/store/homePage/constants";
+import RecentlyViewed from "@/domains/product/components/RecentlyViewed";
+import Recommendations from "@/domains/product/components/Recommendations";
 
 title: "THYONX"
 
@@ -29,6 +31,8 @@ export default function Home() {
         <TopSellingProductsList />
         <LatestBlogPosts />
         <CompanyLogoList />
+        <Recommendations />
+        <RecentlyViewed />
       </div>
     </div>
   );
