@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -20,6 +21,7 @@ type TProps = {
 };
 
 const ShoppingCart = ({ isVisible, quantity, handleOnClose }: TProps) => {
+  const router = useRouter();
   const [cartItems, setCartItems] = useState<TCartItemData[]>();
   const localCartItems = useSelector((state: RootState) => state.cart);
 
@@ -95,7 +97,13 @@ const ShoppingCart = ({ isVisible, quantity, handleOnClose }: TProps) => {
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-[140px] bg-white border-t border-gray-300 flex flex-col items-center justify-center gap-4 mx-6">
           {!!cartItems?.length && (
-            <Button className="w-4/5 text-sm font-semibold text-green-700 border-green-300 bg-green-50">
+            <Button
+              onClick={() => {
+                handleOnClose();
+                router.push('/checkout');
+              }}
+              className="w-4/5 text-sm font-semibold text-green-700 border-green-300 bg-green-50"
+            >
               CHECKOUT
             </Button>
           )}
