@@ -35,6 +35,7 @@ export type TProductBoard = {
   price: number;
   dealDate?: Date;
   dealPrice?: number;
+  saleExpiry?: Date | null;
   specialFeatures?: string[];
   options?: TProductOption[];
   defaultQuantity: number;
@@ -62,6 +63,7 @@ export type TAddProductFormValues = {
   desc?: string;
   price: string;
   salePrice?: string;
+  saleExpiry?: string;
   images: string[];
   categoryID: string;
   stock: number;
@@ -114,6 +116,7 @@ export type TProductPageInfo = {
   specialFeatures: string[];
   price: number;
   salePrice: number | null;
+  saleExpiry: Date | null;
   specifications: TSpecification[];
   path: TPath[];
   Review: any[];

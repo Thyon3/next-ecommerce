@@ -7,6 +7,7 @@ export type TProductCard = {
   specs: string[];
   price: number;
   dealPrice?: number;
+  saleExpiry?: string | Date;
   imgUrl: [string, string];
   url: string;
   staticWidth?: boolean;
