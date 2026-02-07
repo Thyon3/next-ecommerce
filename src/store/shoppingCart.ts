@@ -3,6 +3,7 @@ import { PayloadAction, configureStore, createSlice } from "@reduxjs/toolkit";
 import { TCartItem } from "@/shared/types/shoppingCart";
 
 import { loadState, saveState } from "./storeLocalStorage";
+import comparisonReducer from "./comparison";
 
 export type TCartState = {
   items: TCartItem[];
@@ -49,6 +50,7 @@ const cartSlice = createSlice({
 export const shoppingCartStore = configureStore({
   reducer: {
     cart: cartSlice.reducer,
+    comparison: comparisonReducer,
   },
   preloadedState: loadState(),
 });
