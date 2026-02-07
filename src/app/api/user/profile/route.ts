@@ -22,6 +22,7 @@ export async function GET(req: Request) {
                 image: true,
                 role: true,
                 address: true,
+                loyaltyPoints: true,
             },
         });
 
