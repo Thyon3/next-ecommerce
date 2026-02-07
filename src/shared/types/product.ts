@@ -38,6 +38,7 @@ export type TProductBoard = {
   specialFeatures?: string[];
   options?: TProductOption[];
   defaultQuantity: number;
+  reviewsCount?: number;
 };
 
 export type TProductPath = {
@@ -63,12 +64,16 @@ export type TAddProductFormValues = {
   salePrice?: string;
   images: string[];
   categoryID: string;
+  stock: number;
   specifications: ProductSpec[];
 };
 
 export type TProductListItem = {
   id: string;
   name: string;
+  price: number;
+  stock: number;
+  images: string[];
   category: {
     id: string;
     name: string;
@@ -109,4 +114,10 @@ export type TProductPageInfo = {
   salePrice: number | null;
   specifications: TSpecification[];
   path: TPath[];
+  Review: any[];
+  category: {
+    id: string;
+    name: string;
+    parentID: string | null;
+  };
 };
