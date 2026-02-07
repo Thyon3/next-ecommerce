@@ -172,6 +172,8 @@ export const getCartProducts = async (productIDs: string[]) => {
         images: true,
         price: true,
         salePrice: true,
+        isAvailable: true,
+        specialFeatures: true,
       },
     });
 
