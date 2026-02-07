@@ -51,6 +51,10 @@ const AdminProducts = () => {
     }
   };
 
+  const handleExport = () => {
+    window.location.href = '/api/admin/products/export';
+  };
+
   return (
     <div className="flex flex-col p-8">
       <div className="flex items-center justify-between h-20 mb-8 gap-4">
@@ -64,7 +68,10 @@ const AdminProducts = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <Button onClick={() => setShowProductWindow(true)}>Add new product</Button>
+        <div className="flex gap-2">
+          <Button className="!bg-gray-100 !text-gray-900 border border-gray-200" onClick={handleExport}>Export CSV</Button>
+          <Button onClick={() => setShowProductWindow(true)}>Add new product</Button>
+        </div>
       </div>
       <div className="flex flex-col text-sm text-gray-800 gap-2">
         {productsList.length ? (
