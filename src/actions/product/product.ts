@@ -21,6 +21,7 @@ const ValidateAddProduct = z.object({
   categoryID: z.string().min(6),
   price: z.string().min(1),
   salePrice: z.string(),
+  stock: z.number().min(0).default(0),
   specifications: z.array(
     z.object({
       specGroupID: z.string().min(6),
@@ -55,6 +56,7 @@ export const addProduct = async (data: TAddProductFormValues) => {
             isAvailable: data.isAvailable,
             price: price,
             salePrice: salePrice,
+            stock: data.stock,
             images: [...data.images],
             specs: data.specifications,
           },
@@ -74,6 +76,9 @@ export const getAllProducts = async () => {
       select: {
         id: true,
         name: true,
+        price: true,
+        stock: true,
+        images: true,
         category: {
           select: {
             id: true,
@@ -113,8 +118,22 @@ export const getOneProduct = async (productID: string) => {
           select: {
             id: true,
             parentID: true,
+            name: true,
           },
         },
+        Review: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                image: true,
+              }
+            }
+          },
+          orderBy: {
+            createdAt: 'desc'
+          }
+        }
       },
     });
     if (!result) return { error: "Invalid Data!" };
@@ -252,5 +271,31 @@ const getPathByCategoryID = async (categoryID: string, parentID: string | null) 
     return path;
   } catch {
     return null;
+  }
+};
+
+export const getSimilarProducts = async (categoryID: string, excludeProductID: string) => {
+  try {
+    const result = await db.product.findMany({
+      where: {
+        categoryID,
+        NOT: {
+          id: excludeProductID,
+        },
+      },
+      take: 5,
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        salePrice: true,
+        images: true,
+        specialFeatures: true,
+        isAvailable: true,
+      },
+    });
+    return { res: result };
+  } catch (error) {
+    return { error: JSON.stringify(error) };
   }
 };
