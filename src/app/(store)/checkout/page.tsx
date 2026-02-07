@@ -23,6 +23,10 @@ const CheckoutPage = () => {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
+    const [couponCode, setCouponCode] = useState("");
+    const [appliedCoupon, setAppliedCoupon] = useState<{ code: string, discount: number, isFixed: boolean } | null>(null);
+    const [couponError, setCouponError] = useState("");
+    const [verifyingCoupon, setVerifyingCoupon] = useState(false);
 
     useEffect(() => {
         const fetchCartDetails = async () => {
@@ -62,7 +66,44 @@ const CheckoutPage = () => {
         fetchCartDetails();
     }, [cartItems, router]);
 
-    const totalAmount = products.reduce((acc, p) => acc + (p.dealPrice || p.price) * p.quantity, 0);
+    const subtotal = products.reduce((acc, p) => acc + (p.dealPrice || p.price) * p.quantity, 0);
+
+    let discountAmount = 0;
+    if (appliedCoupon) {
+        if (appliedCoupon.isFixed) {
+            discountAmount = appliedCoupon.discount;
+        } else {
+            discountAmount = subtotal * (appliedCoupon.discount / 100);
+        }
+    }
+
+    const totalAmount = Math.max(0, subtotal - discountAmount);
+
+    const handleCouponVerify = async () => {
+        if (!couponCode) return;
+        setVerifyingCoupon(true);
+        setCouponError("");
+        try {
+            const res = await fetch('/api/coupons/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: couponCode })
+            });
+
+            if (!res.ok) {
+                const msg = await res.text();
+                throw new Error(msg);
+            }
+
+            const data = await res.json();
+            setAppliedCoupon(data);
+        } catch (err: any) {
+            setCouponError(err.message);
+            setAppliedCoupon(null);
+        } finally {
+            setVerifyingCoupon(false);
+        }
+    };
 
     const handlePlaceOrder = async () => {
         setIsSubmitting(true);
@@ -179,11 +220,39 @@ const CheckoutPage = () => {
                 <div className="lg:col-span-1">
                     <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 sticky top-40">
                         <h2 className="text-xl font-medium text-gray-800 mb-6 border-b pb-4">Total Amount</h2>
+
+                        <div className="mb-6">
+                            <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Coupon Code</label>
+                            <div className="flex gap-2">
+                                <input
+                                    className="flex-grow border p-2 rounded text-sm uppercase"
+                                    placeholder="Enter code"
+                                    value={couponCode}
+                                    onChange={e => setCouponCode(e.target.value)}
+                                />
+                                <button
+                                    onClick={handleCouponVerify}
+                                    disabled={verifyingCoupon || !couponCode}
+                                    className="bg-gray-100 px-4 py-2 rounded text-sm font-bold hover:bg-gray-200 disabled:opacity-50"
+                                >
+                                    {verifyingCoupon ? "..." : "Apply"}
+                                </button>
+                            </div>
+                            {couponError && <p className="text-red-500 text-[10px] mt-1">{couponError}</p>}
+                            {appliedCoupon && <p className="text-green-600 text-[10px] mt-1">Coupon applied: {appliedCoupon.code}</p>}
+                        </div>
+
                         <div className="space-y-3 mb-6">
                             <div className="flex justify-between text-sm text-gray-600">
                                 <span>Subtotal</span>
-                                <span>${totalAmount.toFixed(2)}</span>
+                                <span>${subtotal.toFixed(2)}</span>
                             </div>
+                            {discountAmount > 0 && (
+                                <div className="flex justify-between text-sm text-green-600">
+                                    <span>Discount</span>
+                                    <span>-${discountAmount.toFixed(2)}</span>
+                                </div>
+                            )}
                             <div className="flex justify-between text-sm text-gray-600">
                                 <span>Shipping</span>
                                 <span className="text-green-600 font-medium">Free</span>
