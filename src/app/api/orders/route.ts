@@ -39,6 +39,16 @@ export async function POST(req: Request) {
                         }
                     }
                 });
+
+                // Log stock change
+                await tx.stockLog.create({
+                    data: {
+                        productId: item.productId,
+                        oldStock: product.stock,
+                        newStock: product.stock - item.quantity,
+                        reason: `ORDER_SALE:${item.productId}`
+                    }
+                });
             }
 
             const userId = (session.user as any).id || (await tx.user.findUnique({ where: { email: session.user?.email || "" } }))?.id;

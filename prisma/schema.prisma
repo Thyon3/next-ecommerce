@@ -91,6 +91,7 @@ model Product {
   OrderItem       OrderItem[]
   Review          Review[]
   Wishlist        Wishlist[]
+  stockLogs       StockLog[]
 }
 
 type ProductSpec {
@@ -268,4 +269,14 @@ enum ReturnStatus {
   APPROVED
   REJECTED
   REFUNDED
+}
+
+model StockLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId String   @db.ObjectId
+  product   Product  @relation(fields: [productId], references: [id])
+  oldStock  Int
+  newStock  Int
+  reason    String   // e.g., "RESTOCK", "SALE", "RETURN"
+  createdAt DateTime @default(now())
 }

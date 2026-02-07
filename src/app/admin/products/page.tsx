@@ -55,6 +55,33 @@ const AdminProducts = () => {
     window.location.href = '/api/admin/products/export';
   };
 
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const csv = event.target?.result as string;
+      setIsLoading(true);
+      try {
+        const res = await fetch('/api/admin/products/import', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ csv })
+        });
+        const data = await res.json();
+        alert(`Import completed! Success: ${data.filter((r: any) => r.status === 'SUCCESS').length}, Failed: ${data.filter((r: any) => r.status === 'FAILED').length}`);
+        getProductsList();
+      } catch (error) {
+        console.error("Import failed", error);
+        alert("Import failed. Check console for details.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    reader.readAsText(file);
+  };
+
   return (
     <div className="flex flex-col p-8">
       <div className="flex items-center justify-between h-20 mb-8 gap-4">
@@ -69,6 +96,10 @@ const AdminProducts = () => {
           />
         </div>
         <div className="flex gap-2">
+          <label className="bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors shadow-sm flex items-center justify-center">
+            Import CSV
+            <input type="file" accept=".csv" className="hidden" onChange={handleImport} />
+          </label>
           <Button className="!bg-gray-100 !text-gray-900 border border-gray-200" onClick={handleExport}>Export CSV</Button>
           <Button onClick={() => setShowProductWindow(true)}>Add new product</Button>
         </div>
