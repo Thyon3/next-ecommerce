@@ -164,6 +164,7 @@ model User {
   image          String?
   role           Role      @default(USER)
   address        Address?
+  loyaltyPoints  Int       @default(0)
   accounts       Account[]
   orders         Order[]
   wishlist       Wishlist[]
@@ -182,6 +183,7 @@ model Order {
   totalAmount     Float
   status          OrderStatus @default(PENDING)
   shippingAddress Address
+  estimatedDelivery DateTime?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   items           OrderItem[]
