@@ -5,6 +5,7 @@ import StoreNavBar from "@/domains/store/shared/components/navbar";
 import Warning from "@/domains/store/shared/components/warning";
 import BackToTopButton from "@/shared/components/UI/BackToTopButton";
 import { shoppingCartStore } from "@/store/shoppingCart";
+import ComparisonTray from "@/domains/product/components/ComparisonTray";
 
 import StoreFooter from "../../domains/store/shared/components/footer/index";
 
@@ -19,6 +20,7 @@ const StoreLayout = ({ children }: { children: React.ReactNode }) => {
         <StoreFooter />
         <Warning />
         <BackToTopButton />
+        <ComparisonTray />
       </Provider>
     </>
   );
