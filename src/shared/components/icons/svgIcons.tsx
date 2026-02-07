@@ -13,11 +13,12 @@ type TSvgProperties = {
   fill?: string;
   stroke?: string;
   style?: string;
+  className?: string;
 };
 
-const createIcon = ({ width, svgData, viewBox, fill }: TSvgProperties) => {
+const createIcon = ({ width, svgData, viewBox, fill, className }: TSvgProperties) => {
   return (
-    <svg width={width} viewBox={viewBox} fill={fill} xmlns="http://www.w3.org/2000/svg">
+    <svg width={width} viewBox={viewBox} fill={fill} className={className} xmlns="http://www.w3.org/2000/svg">
       {svgData}
     </svg>
   );
@@ -424,16 +425,17 @@ export const Spinner = ({ width, stroke, className }: TProps) => {
   return createIcon({
     width,
     viewBox: "0 0 24 24",
+    className,
     svgData: (
       <path
         d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 9.27455 20.9097 6.80375 19.1414 5"
         stroke={stroke}
         strokeWidth="2.5"
         strokeLinecap="round"
-        className={className}
         fill="none"
       />
     ),
   });
 };
+
 
