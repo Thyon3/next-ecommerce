@@ -82,6 +82,7 @@ model Product {
   optionSets      String[]      @db.ObjectId
   price           Float
   salePrice       Float?
+  saleExpiry      DateTime?
   stock           Int           @default(0)
   specs           ProductSpec[]
   brand           Brand         @relation(fields: [brandID], references: [id])
