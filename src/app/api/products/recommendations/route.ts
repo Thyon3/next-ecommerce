@@ -8,7 +8,7 @@ export async function GET(req: Request) {
     try {
         const session = await getServerSession(authOptions);
 
-        let recommendedProducts = [];
+        let recommendedProducts: any[] = [];
 
         if (session && session.user) {
             const userId = (session.user as any).id || (await db.user.findUnique({ where: { email: session.user?.email || "" } }))?.id;
