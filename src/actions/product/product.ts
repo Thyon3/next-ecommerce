@@ -1,6 +1,9 @@
 "use server";
 import { ProductSpec } from "@prisma/client";
 import { z } from "zod";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/shared/lib/authOptions";
+import { logAudit } from "@/shared/utils/auditLogger";
 
 import { db } from "@/shared/lib/db";
 import {
@@ -64,6 +67,13 @@ export const addProduct = async (data: TAddProductFormValues) => {
       },
     });
     if (!result) return { error: "Can't Insert Data" };
+
+    const session = await getServerSession(authOptions);
+    if (session?.user) {
+      const userId = (session.user as any).id || (await db.user.findUnique({ where: { email: session.user?.email || "" } }))?.id;
+      await logAudit(userId, "CREATE_PRODUCT", { name: data.name, categoryId: data.categoryID });
+    }
+
     return { res: result };
   } catch (error) {
     return { error: JSON.stringify(error) };
@@ -194,6 +204,13 @@ export const deleteProduct = async (productID: string) => {
     });
 
     if (!result) return { error: "Can't Delete!" };
+
+    const session = await getServerSession(authOptions);
+    if (session?.user) {
+      const userId = (session.user as any).id || (await db.user.findUnique({ where: { email: session.user?.email || "" } }))?.id;
+      await logAudit(userId, "DELETE_PRODUCT", { productId: productID, name: result.name });
+    }
+
     return { res: result };
   } catch (error) {
     return { error: JSON.stringify(error) };
