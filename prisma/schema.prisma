@@ -242,3 +242,10 @@ model AuditLog {
   ipAddress String?
   createdAt DateTime @default(now())
 }
+
+model Subscriber {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
