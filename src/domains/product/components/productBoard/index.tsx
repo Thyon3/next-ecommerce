@@ -42,7 +42,7 @@ const ProductBoard = ({ boardData }: { boardData: TProductBoard }) => {
           <StarIcon width={15} stroke="#856B0F" fill="#FFD643" />
           <StarIcon width={15} stroke="#856B0F" fill="#FFD643" />
           <Link href={"#"} className="ml-4 text-xs text-bitex-blue-300">
-            880 User Reviews
+            {boardData.reviewsCount || 0} User Reviews
           </Link>
         </div>
       </section>
