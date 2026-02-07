@@ -24,6 +24,7 @@ const ValidateAddProduct = z.object({
   categoryID: z.string().min(6),
   price: z.string().min(1),
   salePrice: z.string(),
+  saleExpiry: z.string().optional(),
   stock: z.number().min(0).default(0),
   specifications: z.array(
     z.object({
@@ -44,6 +45,7 @@ export const addProduct = async (data: TAddProductFormValues) => {
   try {
     const price = convertStringToFloat(data.price);
     const salePrice = data.salePrice ? convertStringToFloat(data.salePrice) : null;
+    const saleExpiry = data.saleExpiry ? new Date(data.saleExpiry) : null;
 
     const result = db.category.update({
       where: {
@@ -59,6 +61,7 @@ export const addProduct = async (data: TAddProductFormValues) => {
             isAvailable: data.isAvailable,
             price: price,
             salePrice: salePrice,
+            saleExpiry: saleExpiry,
             stock: data.stock,
             images: [...data.images],
             specs: data.specifications,
@@ -120,6 +123,7 @@ export const getOneProduct = async (productID: string) => {
         images: true,
         price: true,
         salePrice: true,
+        saleExpiry: true,
         specs: true,
         specialFeatures: true,
         isAvailable: true,
@@ -148,14 +152,16 @@ export const getOneProduct = async (productID: string) => {
     });
     if (!result) return { error: "Invalid Data!" };
 
-    const specifications = await generateSpecTable(result.specs);
+    const resultWithProperType = result as any;
+
+    const specifications = await generateSpecTable(resultWithProperType.specs);
     if (!specifications || specifications.length === 0) return { error: "Invalid Date" };
 
-    const pathArray: TPath[] | null = await getPathByCategoryID(result.category.id, result.category.parentID);
+    const pathArray: TPath[] | null = await getPathByCategoryID(resultWithProperType.category.id, resultWithProperType.category.parentID);
     if (!pathArray || pathArray.length === 0) return { error: "Invalid Date" };
 
     //eslint-disable-next-line
-    const { specs, ...others } = result;
+    const { specs, ...others } = resultWithProperType;
     const mergedResult: TProductPageInfo = {
       ...others,
       specifications,
