@@ -13,6 +13,7 @@ import NavBarFavorite from "./navFavorite";
 import NavBarProfile from "./navProfile";
 import NavBarShopping from "./navShopping";
 import SearchBar from "./SearchBar";
+import LoyaltyPointsDisplay from "./LoyaltyPointsDisplay";
 
 const NAVBAR_ITEMS = [
   { name: "Computer", link: "/list/pc-laptops/computer" },
@@ -63,7 +64,8 @@ const StoreNavBar = () => {
             <Image alt="Thyonx Logo" src={"/images/logo.png"} width={125} height={40} quality={100} />
           </Link>
           <SearchBar />
-          <div className="text-gray-500 flex pr-2 md:pr-0">
+          <div className="text-gray-500 flex pr-2 md:pr-0 items-center">
+            <LoyaltyPointsDisplay />
             <NavBarProfile />
             <NavBarFavorite />
             <NavBarShopping />
