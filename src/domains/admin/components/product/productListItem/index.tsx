@@ -28,9 +28,11 @@ const ProductListItem = ({ data, requestReload }: TProps) => {
   };
 
   return (
-    <div className="w-full h-12 px-4 grid grid-cols-3 justify-between items-center text-sm text-gray-800 rounded-lg transition-colors duration-300 select-none hover:bg-gray-100">
-      <span className={"styles.name"}>{data.name}</span>
-      <span className={"styles.category"}>{data.category.name}</span>
+    <div className="w-full h-12 px-4 grid grid-cols-5 justify-between items-center text-sm text-gray-800 rounded-lg transition-colors duration-300 select-none hover:bg-gray-100">
+      <span className="font-medium">{data.name}</span>
+      <span className="text-gray-500">{data.category.name}</span>
+      <span className="font-semibold">${data.price}</span>
+      <span className={data.stock < 5 ? "text-red-600 font-bold" : "text-gray-600"}>{data.stock} in stock</span>
       <div className="flex gap-2 justify-end">
         <Button onClick={() => console.log("edit product")}>edit</Button>
         <Button onClick={() => setShowDelete(true)}>delete</Button>
