@@ -18,6 +18,7 @@ type TProps = {
   onFilterChange: (value: TFilters) => void;
   onBrandChange: (value: number) => void;
   onApplyFilter: () => void;
+  onResetFilters: () => void;
 };
 
 const Filters = ({
@@ -29,6 +30,7 @@ const Filters = ({
   onFilterChange,
   onBrandChange,
   onApplyFilter,
+  onResetFilters,
 }: TProps) => {
   return (
     <div
@@ -53,11 +55,17 @@ const Filters = ({
           showFilters ? "left-0" : "left-[-310px] lg:left-0"
         )}
       >
-        <div className="lg:hidden pb-2 flex justify-between text-gray-500 items-center my-2 border-b border-gray-300">
-          <h2>Filters</h2>
+        <div className="pb-2 flex justify-between text-gray-500 items-center my-2 border-b border-gray-300">
+          <h2 className="text-sm font-bold text-black">Filters</h2>
+          <button
+            onClick={onResetFilters}
+            className="text-xs text-blue-600 hover:underline"
+          >
+            Clear All
+          </button>
           <button
             onClick={() => onToggleWindow(false)}
-            className="block border-white rounded-sm cursor-pointer p-3 duration-300 border hover:bg-gray-100 transition-colors hover:border-gray-200"
+            className="lg:hidden block border-white rounded-sm cursor-pointer p-3 duration-300 border hover:bg-gray-100 transition-colors hover:border-gray-200"
           >
             <CloseIcon width={12} />
           </button>

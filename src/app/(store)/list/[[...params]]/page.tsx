@@ -281,6 +281,7 @@ const ListPage = () => {
             onBrandChange={handleBrandChange}
             isFilterChanged={isFilterChanged}
             onApplyFilter={handleApplyFilter}
+            onResetFilters={handleResetFilters}
             pageStatus={currentPageStatus}
           />
           <div className="flex-grow flex flex-col ml-0 2xl:ml-4 lg:ml-3">
