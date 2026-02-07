@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import StatsCard from '@/domains/admin/components/StatsCard';
+import RevenueChart from '@/domains/admin/components/RevenueChart';
 
 interface DashboardStats {
     totalOrders: number;
@@ -71,6 +72,8 @@ const DashboardPage = () => {
                 />
             </div>
 
+            <RevenueChart />
+
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                 <div className="p-6 border-b border-gray-100 flex justify-between items-center">
                     <h3 className="font-bold text-gray-900">Recent Orders</h3>
@@ -95,7 +98,7 @@ const DashboardPage = () => {
                                     <td className="px-6 py-4 text-sm font-semibold text-gray-900">${order.totalAmount}</td>
                                     <td className="px-6 py-4">
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${order.status === 'DELIVERED' ? 'bg-green-100 text-green-800' :
-                                                order.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'
+                                            order.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'
                                             }`}>
                                             {order.status}
                                         </span>
