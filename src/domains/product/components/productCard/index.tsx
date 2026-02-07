@@ -4,6 +4,9 @@ import { useState } from "react";
 
 import { TProductCard } from "@/shared/types/common";
 import { cn } from "@/shared/utils/styling";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/shoppingCart";
+import { addToComparison, removeFromComparison } from "@/store/comparison";
 
 const ProductCard = ({
   id,
@@ -36,6 +39,30 @@ const ProductCard = ({
       }
     } catch (error) {
       console.error("Wishlist error", error);
+    }
+  };
+
+  const dispatch = useDispatch();
+  const comparisonItems = useSelector((state: RootState) => state.comparison.items);
+  const isInComparison = comparisonItems.some((item) => item.id === id);
+
+  const handleCompare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isInComparison) {
+      dispatch(removeFromComparison(id));
+    } else {
+      dispatch(
+        addToComparison({
+          id,
+          name,
+          images: [imgUrl[0].split('/').pop() || '', imgUrl[1].split('/').pop() || ''],
+          price,
+          salePrice: dealPrice || null,
+          isAvailable,
+          specialFeatures: specs,
+        })
+      );
     }
   };
   return (
@@ -106,7 +133,23 @@ const ProductCard = ({
             </span>
           )}
         </div>
-        <div className="flex-grow text-right">
+        <div className="flex-grow text-right flex justify-end gap-1">
+          <button
+            onClick={handleCompare}
+            title="Compare"
+            className={cn(
+              "cursor-pointer size-9 border-none bg-no-repeat bg-center rounded-sm transition-all duration-300 bg-[length:20px_18px]",
+              isInComparison ? "bg-black/5 opacity-100" : "opacity-60 hover:opacity-100"
+            )}
+          >
+            <Image
+              src={isInComparison ? "/icons/analytics.svg" : "/icons/analytics.svg"}
+              alt="Compare"
+              width={20}
+              height={18}
+              className={cn("mx-auto", !isInComparison && "grayscale")}
+            />
+          </button>
           <button
             onClick={handleWishlist}
             className={cn(
