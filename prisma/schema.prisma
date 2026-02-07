@@ -219,3 +219,15 @@ model Wishlist {
 
   @@unique([userId, productId])
 }
+
+model Coupon {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  code        String   @unique
+  discount    Float    // Percentage or Fixed amount
+  isFixed     Boolean  @default(false)
+  expiryDate  DateTime
+  usageLimit  Int      @default(100)
+  usedCount   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
