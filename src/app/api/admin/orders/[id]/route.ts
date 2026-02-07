@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { db } from "@/shared/lib/db";
 import { authOptions } from "@/shared/lib/authOptions";
+import { logAudit } from "@/shared/utils/auditLogger";
 
 export async function PATCH(
     req: Request,
@@ -33,6 +34,12 @@ export async function PATCH(
                 status,
             },
         });
+
+        await logAudit(
+            (session.user as any).id || (await db.user.findUnique({ where: { email: session.user?.email || "" } }))?.id,
+            "UPDATE_ORDER_STATUS",
+            { orderId: params.id, newStatus: status }
+        );
 
         return NextResponse.json(order);
     } catch (error) {
