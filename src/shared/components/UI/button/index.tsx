@@ -29,15 +29,19 @@ const Button = ({ children, className, variant = "primary", size = "medium", isL
       {...props}
       disabled={disabled || isLoading}
       className={cn(
-        "rounded-[4px] font-medium transition-colors duration-300 flex items-center justify-center gap-2",
+        "rounded-[4px] font-medium transition-colors duration-300 flex items-center justify-center gap-2 relative",
         variants[variant],
         sizes[size],
-        (disabled || isLoading) && "opacity-50 cursor-not-allowed disabled:bg-gray-100",
+        (disabled || isLoading) && "opacity-70 cursor-not-allowed",
         className
       )}
     >
-      {isLoading && <Spinner width={16} stroke="currentColor" />}
-      {children}
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Spinner width={20} stroke="currentColor" className="animate-spin" />
+        </div>
+      )}
+      <span className={cn(isLoading && "opacity-0")}>{children}</span>
     </button>
   );
 };
