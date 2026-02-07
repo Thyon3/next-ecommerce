@@ -41,11 +41,17 @@ export async function POST(req: Request) {
                 });
             }
 
+            const userId = (session.user as any).id || (await tx.user.findUnique({ where: { email: session.user?.email || "" } }))?.id;
+
+            const estimatedDelivery = new Date();
+            estimatedDelivery.setDate(estimatedDelivery.getDate() + 7);
+
             const newOrder = await tx.order.create({
                 data: {
-                    userId: (session.user as any).id || (await tx.user.findUnique({ where: { email: session.user?.email || "" } }))?.id,
+                    userId,
                     totalAmount,
                     shippingAddress,
+                    estimatedDelivery,
                     items: {
                         create: items.map((item: any) => ({
                             productId: item.productId,
@@ -58,6 +64,19 @@ export async function POST(req: Request) {
                     items: true,
                 },
             });
+
+            // Award loyalty points (e.g., 1 point per $10)
+            const pointsEarned = Math.floor(totalAmount / 10);
+            if (pointsEarned > 0) {
+                await tx.user.update({
+                    where: { id: userId },
+                    data: {
+                        loyaltyPoints: {
+                            increment: pointsEarned
+                        }
+                    }
+                });
+            }
 
             return newOrder;
         });
