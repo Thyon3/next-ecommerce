@@ -17,9 +17,17 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="styles.adminLayout flex min-h-screen">
       <AdminSidebar />
-      <div className="w-full p-6">
-        <h1 className="w-full block text-gray-700 text-2xl font-light pb-5 mb-2 border-b border-gray-300">Page Name</h1>
-        {children}
+      <div className="w-full">
+        <header className="h-16 border-b border-gray-200 bg-white flex items-center px-8 justify-between">
+          <h1 className="text-xl font-bold text-gray-800 tracking-tight">Management System</h1>
+          <div className="flex items-center gap-4">
+            <div className="w-8 h-8 rounded-full bg-gray-200" />
+            <span className="text-sm font-medium text-gray-600">{session.user?.name}</span>
+          </div>
+        </header>
+        <main className="p-8">
+          {children}
+        </main>
       </div>
     </div>
   );
