@@ -221,6 +221,20 @@ const ProductForm = ({ formValues: props, onChange }: TProps) => {
           />
         </div>
         <div className="flex items-center justify-between">
+          <span>Sale Expiry:</span>
+          <Input
+            type="datetime-local"
+            className="w-[200px]"
+            value={props.saleExpiry}
+            onChange={(e) =>
+              onChange({
+                ...props,
+                saleExpiry: e.currentTarget.value,
+              })
+            }
+          />
+        </div>
+        <div className="flex items-center justify-between">
           <span>Is In Stock:</span>
           <div className="flex gap-2 items-center">
             <span
