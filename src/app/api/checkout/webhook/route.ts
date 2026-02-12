@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/shared/lib/authOptions";
 import Stripe from "stripe";
 import { db } from "@/shared/lib/db";
+import { sendOrderConfirmationEmail } from "@/shared/lib/email";
+import { generateTrackingNumber } from "@/shared/lib/shipping";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-06-20",
@@ -117,6 +119,30 @@ export async function POST(req: Request) {
       });
 
       console.log("Order created successfully:", order.id);
+
+      // Send order confirmation email
+      try {
+        const user = await db.user.findUnique({ where: { id: userId } });
+        if (user) {
+          const orderWithItems = await db.order.findUnique({
+            where: { id: order.id },
+            include: {
+              items: {
+                include: {
+                  product: true
+                }
+              }
+            }
+          });
+
+          if (orderWithItems) {
+            await sendOrderConfirmationEmail(orderWithItems, user);
+          }
+        }
+      } catch (emailError) {
+        console.error("Failed to send confirmation email:", emailError);
+        // Don't fail the webhook if email fails
+      }
     } catch (error) {
       console.error("Error creating order from webhook:", error);
       return new NextResponse("Order creation failed", { status: 500 });
