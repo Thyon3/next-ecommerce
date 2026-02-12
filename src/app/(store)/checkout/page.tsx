@@ -110,14 +110,17 @@ const CheckoutPage = () => {
         setError("");
 
         try {
-            const res = await fetch('/api/orders', {
+            // Create Stripe checkout session
+            const res = await fetch('/api/checkout/stripe', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     items: products.map(p => ({
                         productId: p.productId,
+                        productName: p.productName,
                         quantity: p.quantity,
-                        price: p.dealPrice || p.price
+                        price: p.dealPrice || p.price,
+                        imgUrl: p.imgUrl
                     })),
                     shippingAddress: address,
                     totalAmount
@@ -126,12 +129,24 @@ const CheckoutPage = () => {
 
             if (!res.ok) {
                 const data = await res.json();
-                throw new Error(data.message || "Failed to place order");
+                throw new Error(data.message || "Failed to create payment session");
             }
 
-            // Success
-            dispatch(clearCart());
-            router.push('/orders'); // Redirect to order history
+            const { sessionId } = await res.json();
+
+            // Redirect to Stripe Checkout
+            const stripe = (await import('@stripe/stripe-js')).then(module => module.loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!));
+            const stripeInstance = await stripe;
+
+            if (stripeInstance) {
+                const { error } = await stripeInstance.redirectToCheckout({
+                    sessionId
+                });
+
+                if (error) {
+                    throw new Error(error.message);
+                }
+            }
         } catch (err: any) {
             setError(err.message);
         } finally {

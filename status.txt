@@ -1,0 +1,25 @@
+ M src/actions/product/product.ts
+ M src/app/(store)/list/[[...params]]/page.tsx
+ M src/app/(store)/product/[productId]/page.tsx
+ M src/app/admin/layout.tsx
+ M src/app/admin/products/page.tsx
+ M src/domains/admin/components/product/productListItem/index.tsx
+ M src/domains/admin/components/sideBar/index.tsx
+ M src/domains/product/components/productBoard/index.tsx
+ M src/domains/product/components/productCard/index.tsx
+ M src/domains/store/shoppingCard/components/shoppingCart/index.tsx
+ M src/shared/components/UI/button/index.tsx
+ M src/shared/components/icons/svgIcons.tsx
+ M src/shared/types/common.ts
+ M src/shared/types/product.ts
+ M src/store/shoppingCart.ts
+?? docs/
+?? src/app/(store)/checkout/
+?? src/app/(store)/orders/
+?? src/app/(store)/wishlist/
+?? src/app/admin/dashboard/
+?? src/app/admin/low-stock/
+?? src/app/admin/orders/
+?? src/domains/admin/components/StatsCard.tsx
+?? src/domains/product/components/ReviewForm.tsx
+?? status.txt
