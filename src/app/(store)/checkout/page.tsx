@@ -7,6 +7,7 @@ import { RootState, clearCart } from '@/store/shoppingCart';
 import { getCartProducts } from '@/actions/product/product';
 import Button from '@/shared/components/UI/button';
 import { TCartItemData } from '@/shared/types/shoppingCart';
+import { ShippingRate } from '@/shared/lib/shipping';
 
 const CheckoutPage = () => {
     const router = useRouter();
@@ -27,6 +28,9 @@ const CheckoutPage = () => {
     const [appliedCoupon, setAppliedCoupon] = useState<{ code: string, discount: number, isFixed: boolean } | null>(null);
     const [couponError, setCouponError] = useState("");
     const [verifyingCoupon, setVerifyingCoupon] = useState(false);
+    const [shippingRates, setShippingRates] = useState<ShippingRate[]>([]);
+    const [selectedShipping, setSelectedShipping] = useState<ShippingRate | null>(null);
+    const [loadingShipping, setLoadingShipping] = useState(false);
 
     useEffect(() => {
         const fetchCartDetails = async () => {
@@ -77,7 +81,49 @@ const CheckoutPage = () => {
         }
     }
 
-    const totalAmount = Math.max(0, subtotal - discountAmount);
+    const shippingCost = selectedShipping?.rate || 0;
+    const totalAmount = Math.max(0, subtotal - discountAmount + shippingCost);
+
+    // Calculate shipping rates when address changes
+    const calculateShipping = async () => {
+        if (!address.street || !address.city || !address.postalCode || !address.country) {
+            setShippingRates([]);
+            setSelectedShipping(null);
+            return;
+        }
+
+        setLoadingShipping(true);
+        try {
+            const res = await fetch('/api/shipping/rates', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    address,
+                    orderTotal: subtotal - discountAmount
+                })
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                setShippingRates(data.rates);
+                // Auto-select standard shipping if available
+                const standard = data.rates.find((rate: ShippingRate) => rate.type === 'STANDARD');
+                if (standard) {
+                    setSelectedShipping(standard);
+                }
+            }
+        } catch (err) {
+            console.error('Failed to calculate shipping:', err);
+        } finally {
+            setLoadingShipping(false);
+        }
+    };
+
+    useEffect(() => {
+        if (products.length > 0) {
+            calculateShipping();
+        }
+    }, [address, products, appliedCoupon]);
 
     const handleCouponVerify = async () => {
         if (!couponCode) return;
@@ -108,6 +154,12 @@ const CheckoutPage = () => {
     const handlePlaceOrder = async () => {
         setIsSubmitting(true);
         setError("");
+
+        if (!selectedShipping) {
+            setError("Please select a shipping method");
+            setIsSubmitting(false);
+            return;
+        }
 
         try {
             // Create Stripe checkout session
@@ -209,6 +261,41 @@ const CheckoutPage = () => {
                         </div>
                     </div>
 
+                    {/* Shipping Options */}
+                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <h2 className="text-xl font-medium text-gray-800 mb-6 border-b pb-4">Shipping Options</h2>
+                        {loadingShipping ? (
+                            <div className="text-center py-4">Calculating shipping rates...</div>
+                        ) : shippingRates.length > 0 ? (
+                            <div className="space-y-3">
+                                {shippingRates.map(rate => (
+                                    <label key={rate.id} className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <div className="flex items-center">
+                                            <input
+                                                type="radio"
+                                                name="shipping"
+                                                checked={selectedShipping?.id === rate.id}
+                                                onChange={() => setSelectedShipping(rate)}
+                                                className="mr-3"
+                                            />
+                                            <div>
+                                                <p className="font-medium text-gray-900">{rate.name}</p>
+                                                <p className="text-sm text-gray-500">{rate.description}</p>
+                                            </div>
+                                        </div>
+                                        <p className="font-semibold text-gray-900">
+                                            {rate.rate === 0 ? 'FREE' : `$${rate.rate.toFixed(2)}`}
+                                        </p>
+                                    </label>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-4 text-gray-500">
+                                Enter your address to see shipping options
+                            </div>
+                        )}
+                    </div>
+
                     {/* Order Summary */}
                     <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                         <h2 className="text-xl font-medium text-gray-800 mb-6 border-b pb-4">Order Items</h2>
@@ -270,7 +357,9 @@ const CheckoutPage = () => {
                             )}
                             <div className="flex justify-between text-sm text-gray-600">
                                 <span>Shipping</span>
-                                <span className="text-green-600 font-medium">Free</span>
+                                <span className="font-medium">
+                                    {shippingCost === 0 ? 'FREE' : `$${shippingCost.toFixed(2)}`}
+                                </span>
                             </div>
                             <div className="border-t pt-3 flex justify-between text-lg font-bold text-gray-900">
                                 <span>Total</span>
