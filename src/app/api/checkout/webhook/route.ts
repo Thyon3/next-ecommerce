@@ -3,8 +3,11 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/shared/lib/authOptions";
 import Stripe from "stripe";
 import { db } from "@/shared/lib/db";
+<<<<<<< HEAD
 import { sendOrderConfirmationEmail } from "@/shared/lib/email";
 import { generateTrackingNumber } from "@/shared/lib/shipping";
+=======
+>>>>>>> 7c1c2b9 (feat: integrate Stripe payment processing)
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-06-20",
@@ -119,6 +122,7 @@ export async function POST(req: Request) {
       });
 
       console.log("Order created successfully:", order.id);
+<<<<<<< HEAD
 
       // Send order confirmation email
       try {
@@ -143,6 +147,8 @@ export async function POST(req: Request) {
         console.error("Failed to send confirmation email:", emailError);
         // Don't fail the webhook if email fails
       }
+=======
+>>>>>>> 7c1c2b9 (feat: integrate Stripe payment processing)
     } catch (error) {
       console.error("Error creating order from webhook:", error);
       return new NextResponse("Order creation failed", { status: 500 });
